@@ -11,9 +11,11 @@ Each earthquake data item placed into the stream consists of:
 '''
 
 from earthquake import Earthquake
+from kafka-p
 
-# Connect to kafka and see if topic already exists. If not, create it
-### TBD ####
+# Connect to kafka and create the topic
+
+
 
 # Instantiate an instance of Earthquake
 quake = Earthquake(1) 
