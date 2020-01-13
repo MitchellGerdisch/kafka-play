@@ -15,17 +15,22 @@ from earthquake import Earthquake
 # Connect to kafka and see if topic already exists. If not, create it
 ### TBD ####
 
-# Get earthquake data and set the interval to 10 minutes for each invocation
-quake = Earthquake(10) 
-quake_data_set = quake.get_quake_set()	
-quake_data = quake_data_set["features"]
-for quake_entry in quake_data:
-	quake_kafka_entry = {
-		"id": quake_entry["id"],
-		"mag": quake_entry["properties"]["mag"],
-		"time": quake_entry["properties"]["time"],
-		"lat": quake_entry["geometry"]["coordinates"][1],
-		"long": quake_entry["geometry"]["coordinates"][0],
-		"place": quake_entry["properties"]["place"]
-	}	
-	print(quake_kafka_entry)		
+# Instantiate an instance of Earthquake
+quake = Earthquake(1) 
+
+# loop forever and get earthquake data
+while True:
+	print("start time: "+str(quake.start_epoch_time)+"; end time: "+str(quake.end_epoch_time))
+	quake_data_set = quake.get_quake_set()	
+	quake_data = quake_data_set["features"]
+	for quake_entry in quake_data:
+		quake_kafka_entry = {
+			"id": quake_entry["id"],
+			"mag": quake_entry["properties"]["mag"],
+			"time": quake_entry["properties"]["time"],
+			"lat": quake_entry["geometry"]["coordinates"][1],
+			"long": quake_entry["geometry"]["coordinates"][0],
+			"place": quake_entry["properties"]["place"]
+		}	
+
+	# Push the quake entry to the kafka stream
