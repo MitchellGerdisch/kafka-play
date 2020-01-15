@@ -1,24 +1,25 @@
 # Based on this blog: https://help.aiven.io/en/articles/489572-getting-started-with-aiven-kafka
-
-
 from kafka import KafkaConsumer, KafkaProducer, KafkaAdminClient
 import kafka
 import ssl
 import os
+from kafka_creds import KafkaCreds
 #import logging
 #logging.basicConfig(level=logging.DEBUG)
 
-
+creds = KafkaCreds()
 
 #try:
 
-BOOTSTRAP_SERVERS = os.getenv('KAFKA_BOOTSTRAP_SERVERS')	
-USER = os.getenv('KAFKA_USER')
-PASSWORD = os.getenv('KAFKA_PASSWORD')
-CA_FILE = os.getenv('KAFKA_CA_FILE')
-CERT_FILE = os.getenv('KAFKA_CERT_FILE')	
-KEY_FILE = os.getenv('KAFKA_KEY_FILE')	
+# Get credentials for interacting with Kafka cluster
+BOOTSTRAP_SERVERS = creds.bootstrap_servers
+USER = creds.user
+PASSWORD = creds.password
+CA_FILE = creds.ca_file
+CERT_FILE = creds.cert_file
+KEY_FILE = creds.key_file
 
+'''
 # Create topic
 admin = KafkaAdminClient(    
 	bootstrap_servers=BOOTSTRAP_SERVERS,
@@ -33,10 +34,13 @@ admin.create_topics([
 		"name":"mitchtest",
 		"num_partitions": 1,
 		"replication_factor": 1
-	}])
+	}],validate_only=True)
 
-exit
+'''
 
+# Start producing data and filling the stream
+
+# Create instance of a producer
 producer = KafkaProducer(
     bootstrap_servers=BOOTSTRAP_SERVERS,
     security_protocol="SSL",

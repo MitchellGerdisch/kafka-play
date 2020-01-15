@@ -13,9 +13,9 @@ class Earthquake:
 	# initalize start time to be now in format used by API
 
 	def __init__(self, interval):
-		self.interval = interval # time in minutes to wait for each subsequent set of data
+		self.interval = interval # time in minutes to wait before checking for each subsequent set of data
 		self.end_epoch_time = int(time.time()) # End time is now for the first time through
-		self.start_epoch_time = self.end_epoch_time - (self.interval * 3600) # for the first time through, get data from the previous "interval" hours
+		self.start_epoch_time = self.end_epoch_time - (self.interval * 3600) # to prime the pump so to speak get the earthquake data for the last "interval" number of hours
 
 	def get_quake_set(self):
 		# Get now time
@@ -23,7 +23,9 @@ class Earthquake:
 
 		# If now is earlier than the end time, wait until it is end time
 		if (now_epoch_time < self.end_epoch_time):
-			time.sleep(self.end_epoch_time - now_epoch_time)		
+			sleep_time = self.end_epoch_time - now_epoch_time
+			print("Sleeping "+str(sleep_time)+" seconds before checking for earthquakes ...")
+			time.sleep(sleep_time)		
 
 		# And reset end time to now so we are synched up for this invocation.
 		# If we did the sleep above, this is pretty much a no-op.
@@ -39,7 +41,7 @@ class Earthquake:
 
 		# Update the the start and end time for the next invocation.
 		self.start_epoch_time = self.end_epoch_time # Next time start where we just ended.
-		self.end_epoch_time = self.start_epoch_time + (self.interval * 60) # and end "interval" minutes in the future
+		self.end_epoch_time = self.start_epoch_time + (self.interval * 60) # and end "interval" seconds in the future
 		
 		return response.json()
 
