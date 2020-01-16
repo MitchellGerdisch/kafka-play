@@ -17,8 +17,8 @@ env:
   - secure: KR3H3wkdIraI9baVQWVlOuCsBrRVYgGd+eefmKQ8ATcycl+CmHXX5srA1CT5LtMZPoCLyHyzgvnhfeBwQcqFFjbzMb4c/kY7Qx+EjHluALtOxFbHLYo7wmEGdnUF/ydqOiTa7SC2prqb3n+XStuFLn7x7AThxyHhqiyfLZe+NugwxCuXc9bf8HplwZc2bxUwAvnR5c5T4pSLH43zm2fQR/MiWgWJjAHd8576SHR57W/OF1+91NLlpJZAAb+nYQL8M3Zq6kIHa+2r1BAKMm+iPP4sQirn/G+DmWIrim3JlIX1xHQP00NmGFYookV8wo3gBvZSPccMM53Zayi4DdQI2AcrU3rh4B1l+BhFL5aardZoX5OUK9NDtXkkm5jLFEAO1aZDRcP59M9bRzQzJG09tQz6ZqTKxlvqT3C4SeaODrqFdobYkqOTn+sEwHMlXMM+iN0IRT29ljKtKvNH/y6vh94pJdmyso9IcwfCYscRaAqOLd8ByL4F8nmYQJkjmfuFjqb0BEtJP3+5p0XtQhOpn/6VCsbblwpuwSFfbt7gwbcRkmkAXyJXlwMLKuIkgZEA8kMUTlKJa0pGsW+RyVir96JuOWEN2L3OEtMPIulKsmkickPKmcV7CQsPwRd5QkQur+JqxtuRMbkXAfWPG4dbad0vVE5UxbOgXfDUi2cFedg=
 before_install:
 - openssl aes-256-cbc -K $encrypted_8d7507cbd551_key -iv $encrypted_8d7507cbd551_iv
-  -in service.key.enc -out ./DO_NOT_COMMIT/service.key -d
-- openssl aes-256-cbc -K $encrypted_8d7507cbd551_key -iv $encrypted_8d7507cbd551_iv
   -in service.cert.enc -out ./DO_NOT_COMMIT/service.cert -d
+- openssl aes-256-cbc -K $encrypted_8d7507cbd551_key -iv $encrypted_8d7507cbd551_iv
+  -in service.key.enc -out ./DO_NOT_COMMIT/service.key -d
 - openssl aes-256-cbc -K $encrypted_8d7507cbd551_key -iv $encrypted_8d7507cbd551_iv
   -in ca.pem.enc -out ./DO_NOT_COMMIT/ca.pem -d
