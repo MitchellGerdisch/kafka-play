@@ -22,6 +22,7 @@ from earthquake import Earthquake
 from kafka import KafkaProducer
 from kafka_creds import KafkaCreds
 import json
+import sys
 
 # Instantiate a set of creds for talking to the Kafka cluster
 creds = KafkaCreds()
@@ -43,7 +44,7 @@ producer = KafkaProducer(
 )
 
 # Instantiate an instance of Earthquake
-quake = Earthquake(1) 
+quake = Earthquake(20)  # after the initial grab, will wait 30 minutes between requests for new data. Earthquakes don't happen all that frequently - thankfully
 
 # As per: https://github.com/aiven/aiven-kafka-connect-jdbc/blob/master/docs/sink-connector.md I need to set up schema info in the JSON
 earthquake_db_schema = {
@@ -59,8 +60,10 @@ earthquake_db_schema = {
 }
 
 
-# loop forever and get earthquake data
-while True:
+# Get earthquake data and push it into kafka 
+# Loop forever unless we are in Test mode 
+keep_running = True
+while keep_running:
 	print("Querying earthquake data ...")
 	quake_data_set = quake.get_quake_set()	
 	quake_data = quake_data_set["features"]
@@ -83,4 +86,7 @@ while True:
 
 	# Force sending of all messages
 	producer.flush()	
+	# See if being run in test mode in which case we just get the initial set of earthquakes from the previous several hours and don't wait for any additional events
+	if (len(sys.argv) > 1) and (sys.argv[1] == "TEST"):
+		keep_running = False
 
