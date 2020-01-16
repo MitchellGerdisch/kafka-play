@@ -10,7 +10,6 @@ This is a small project that uses the [US Geological Service Earthquake API](htt
 	* See the configuration notes below.
 * Postgres DB with
 	* DB: defaultdb
-	* Table: earthquakes
 
 ## Usage
 * Set the following environment variables:
