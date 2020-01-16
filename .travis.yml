@@ -3,7 +3,7 @@ python:
 - 3.7.6
 cache: pip
 install:
-- pip install kafka-python
+- pip install kafka-python requests
 script:
 - python earthquake_kafka_producer.py
 env:
