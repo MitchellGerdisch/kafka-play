@@ -5,4 +5,4 @@ cache: pip
 install:
   - pip install kafka-python
 script:
-  - python tests.py
+  - python earthquake_test.py
