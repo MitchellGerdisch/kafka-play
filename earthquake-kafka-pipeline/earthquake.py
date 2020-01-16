@@ -15,7 +15,7 @@ class Earthquake:
 	def __init__(self, interval):
 		self.interval = interval # time in minutes to wait before checking for each subsequent set of data
 		self.end_epoch_time = int(time.time()) # End time is now for the first time through
-		self.start_epoch_time = self.end_epoch_time - (self.interval * 3600) # to prime the pump so to speak get the earthquake data for the last "interval" number of hours
+		self.start_epoch_time = self.end_epoch_time - 36000 # to prime the pump, so to speak, get the pearthquake data for the last 10 hours
 
 	def get_quake_set(self):
 		# Get now time
