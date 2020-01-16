@@ -1,2 +1,4 @@
 import os
-print("TEST RUN: " + os.getenv("MY_SECRET_ENV"))
+envvar = int(os.getenv("MY_SECRET_ENV"))
+newnum = envvar + 5
+print("TEST RUN: " + newnum)
