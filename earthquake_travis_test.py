@@ -25,7 +25,7 @@ pg_connection.commit()
 
 # Now run the producer code
 # This will tell how many earthquakes were found.
-subprocess.call("./earthquake_kafka_producer.py TEST", shell=True)
+subprocess.call("$TRAVIS_BUILD_DIR/earthquake_kafka_producer.py TEST", shell=True)
 
 # Sleep a bit to make sure the connector has time to get the data and create the table
 time.sleep(10) 
