@@ -1,8 +1,11 @@
 language: python
 python:
-  - "3.7.6"
+- 3.7.6
 cache: pip
 install:
-  - pip install kafka-python
+- pip install kafka-python
 script:
-  - python earthquake_test.py
+- python earthquake_test.py
+env:
+  global:
+    secure: qOve+2HoaN3lAmo5Vrsudmln/S0+t9vE0dLoNiweesWBMbqVEH7Bj5fmKLYHW8/bUypwKg+FDTtrfsiUo1H+y75/FhpaNNCs/VmUU7RqQnM5TAoXjZESOSggtcE14dj0vJgkPEROfKEOmb9KDnliBlpjeG5nrvPNqE50ev6tPkt8TQQgfyJRf+BoVMrCpkMrJpl4tAE3jH7VfPWGrqUX7h3tXlnGKFo84pCKXaxE7FphNuvjp9KyyDJa8RaCIZkWMRUUVgpoBiZgZyb4gtrTrwVDTP3EnZyWYgjfTbAhXkuKz1nZnkivzfPEGwwj7AfzSP4xDXfY19FaSMukPLcFnf7VXKMzdlEY8Sq36lf8F5NHv5II9z+FNDgerxcE6OiKbKd6mxZt9ug+Pn0yUU5ShuiRglXkgGA3Nbi8L2uPfVjInBCtCdNGJzy1rFrL/vCmZ1+lmAC+yaPoGeJlWFxASDe3S+iTkWApfLQrmamhJnIJhPJnZimjwtlaC0i5g+vp74W8UZPm7ExLHN/4KbhhRX4mu6tszw8WbQBVgQUaSyNh/rPCcWI4+6Qig0NxJ/04g6nI9pp1+NU5Bc0DdnhQqC55HnVzs6pUyVD/DYmch/nkDalFPR7nV90pPASVcoLiY9KA+du9J8aEAWSWtxyTzCjbNKTCKuCqXne++oYdyxk=
