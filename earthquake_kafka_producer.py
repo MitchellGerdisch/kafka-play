@@ -25,6 +25,11 @@ from kafka_creds import KafkaCreds
 import json
 import sys
 
+test_mode = False
+if (len(sys.argv) > 1) and (sys.argv[1] == "TEST"):
+	test_mode = True	
+
+
 # Instantiate a set of creds for talking to the Kafka cluster
 creds = KafkaCreds()
 bootstrap_server = creds.bootstrap_server
@@ -68,7 +73,7 @@ while keep_running:
 	print("Querying earthquake data ...")
 	quake_data_set = quake.get_quake_set()	
 	quake_data = quake_data_set["features"]
-	print ("Found "+str(len(quake_data))+" earthquakes ...")
+	print ("*** Found "+str(len(quake_data))+" earthquakes ...")
 	for quake_entry in quake_data:
 		quake_kafka_entry = {
 			"schema": earthquake_db_schema,
@@ -85,9 +90,12 @@ while keep_running:
 		# Push the quake entry to the kafka stream
 		producer.send("earthquakes", quake_kafka_entry)		
 
+		# See if being run in test mode in which case we 
+		# print out the record we just pushed to kafka and (repeatedly)  our flag to only loop once
+		if test_mode:
+			keep_running = False
+			print(quake_kafka_entry["payload"])		
+
 	# Force sending of all messages
 	producer.flush()	
-	# See if being run in test mode in which case we just get the initial set of earthquakes from the previous several hours and don't wait for any additional events
-	if (len(sys.argv) > 1) and (sys.argv[1] == "TEST"):
-		keep_running = False
 

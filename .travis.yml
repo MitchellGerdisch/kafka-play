@@ -5,17 +5,9 @@ cache: pip
 install:
 - pip install kafka-python requests psycopg2-binary
 script:
-- echo "**********************************************"
-- echo "*** TESTING JDBC CONNECTOR BASED PIPELINE ****"
-- echo "**********************************************"
 - python earthquake_travis_connector-test_prep.py
 - python earthquake_kafka_producer.py TEST
 - python earthquake_travis_connector-test_check.py
-- echo "****** COMPLETED JDBC CONNECTOR TESTING ******"
-- echo ""
-- echo "****************************************"
-- echo "*** TESTING CONSUMER BASED PIPELINE ****"
-- echo "****************************************"
 - python earthquake_travis_consumer-test_prep.py
 - python earthquake_kafka_consumer.py &
 - python earthquake_travis_consumer-test_check.py
