@@ -1,11 +1,18 @@
 # Earthquake Data Pipeline Using Kafka and PostgresDB
 
-This is a small project that uses the [US Geological Service Earthquake API](https://earthquake.usgs.gov/fdsnws/event/1/#methods) to collect earthquake data and then push it into a kafka stream which is then read on the other side by a connector and/or python consumer that then pushes the data into a Postgres DB table.
+This is a small project that uses the [US Geological Service Earthquake API](https://earthquake.usgs.gov/fdsnws/event/1/#methods) to collect earthquake data and then push it into a kafka stream which is then consuconsumedplaced in a Postgres DB.
+
+## Connector-Based or Consumer-Based
+This repo supports two methods of getting the data into the Postgres DB: 
+* Using a kafka connector, or 
+* Using a python kafka consumer script. 
+
+One or the other can be used. Additionally, the logic supports running both at the same time - they write to two separate Postgres tables.
 
 ## Prerequisites
 * Kafka cluster with
 	* Topic: earthquakes
-* JDBC sink connector 
+* (Optional) JDBC sink connector 
 	* Naturally, it should be connected to the Kafka cluster.
 	* See the configuration notes below.
 * Postgres DB with
@@ -32,8 +39,8 @@ export PG_PASSWORD="<POSTGRES DB USER PASSWORD>"
 ## Usage
 * Run: earthquake_kafka_producer.py
 	* This will start by gathering data for the last several hours and then check for earthquakes every minute thereafter.
-* Run: earthquake_kafka_consumer.py
-    * This is only needed it using the consumer vs using the JDBC sink connector.
+* (Optional) Run: earthquake_kafka_consumer.py 
+    * This is only needed it using the consumer instead of or in addition to using the JDBC sink connector.
 
 ## Output
 ### Connector Based Pipeline
@@ -45,11 +52,11 @@ export PG_PASSWORD="<POSTGRES DB USER PASSWORD>"
 ### Automated Testing Travis-CI
 A travis.yml is included to allow Travis-CI testing. You will need to manage the enironment variables and CA, Cert and Key files.
 ### Manual Testing
-Run the producer and, optionally, the consumer and inspect the "earthquakes" and, if applicable "earthquakes2" tables in the database.
-Additionally, one can leverage t_prep" and "test_check" scripts to reset the table and dump the table. See the travis.yml script block to see how these scripts are used to test the system.
+Run the producer and, optionally, the consumer and inspect the "earthquakes" table (if using connector) and, if applicable "earthquakes2" tables (if using consumer) in the database.
+Additionally, one can leverage the ".*-test_prep" and ".*-test_check" scripts to reset the table and dump the table. See the travis.yml script block to see how these scripts are used to test the system.
 
 # JDBC Sink Connector Configuration Notes
-SSet the configuration file as follows: 
+Set the configuration file as follows: 
 ```
 {
     "name": "kafka-pg-connector",
