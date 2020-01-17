@@ -9,10 +9,11 @@ Each earthquake data item placed into the stream consists of:
 - Time of the quake (UTC)
 - Latitude of the quake
 - Longitude of the quake
+- Description of where the earthquake occurred.
 
 PREREQUISITES:
 - Kafka service with a topic named "earthquakes"
-- Applicable credentials configured as per the local kafka_creds kmodule.
+- Applicable credentials configured as per the local kafka_creds module.
 
 TO-DOs:
 - Add automation to create the topic. 
@@ -40,7 +41,7 @@ producer = KafkaProducer(
     ssl_cafile=ca_file,
     ssl_certfile=cert_file,
     ssl_keyfile=key_file,
-	value_serializer=lambda m: json.dumps(m).encode('ascii')
+	value_serializer=lambda m: json.dumps(m).encode('utf-8')
 )
 
 # Instantiate an instance of Earthquake
