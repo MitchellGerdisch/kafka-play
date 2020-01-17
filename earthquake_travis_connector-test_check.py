@@ -40,5 +40,5 @@ for pg_record in pg_records:
 	lat = str(pg_record[4])
 	long = str(pg_record[5])
 	print("id: "+id+" mag: "+mag+" time: "+time+"  lat: "+lat+" long: "+long+" place: "+place)
-print(pg_records)
+	
 pg_connection.close()
