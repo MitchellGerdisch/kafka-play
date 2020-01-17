@@ -46,6 +46,7 @@ export PG_PASSWORD="<POSTGRES DB USER PASSWORD>"
 A travis.yml is included to allow Travis-CI testing. You will need to manage the enironment variables and CA, Cert and Key files.
 ### Manual Testing
 Run the producer and, optionally, the consumer and inspect the "earthquakes" and, if applicable "earthquakes2" tables in the database.
+Additionally, one can leverage t_prep" and "test_check" scripts to reset the table and dump the table. See the travis.yml script block to see how these scripts are used to test the system.
 
 # JDBC Sink Connector Configuration Notes
 SSet the configuration file as follows: 

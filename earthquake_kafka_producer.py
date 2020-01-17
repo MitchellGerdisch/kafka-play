@@ -91,7 +91,7 @@ while keep_running:
 		producer.send("earthquakes", quake_kafka_entry)		
 
 		# See if being run in test mode in which case we 
-		# print out the record we just pushed to kafka and (repeatedly)  our flag to only loop once
+		# print out the record we just pushed to kafka and (repeatedly) set our flag to only loop once
 		if test_mode:
 			keep_running = False
 			print(quake_kafka_entry["payload"])		
