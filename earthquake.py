@@ -24,7 +24,7 @@ class Earthquake:
 		# If now is earlier than the end time, wait until it is end time
 		if (now_epoch_time < self.end_epoch_time):
 			sleep_time = self.end_epoch_time - now_epoch_time
-			print("Sleeping "+str(sleep_time/60)+" minutes before checking for earthquakes ...")
+			print("Sleeping about "+str(round(sleep_time/60))+" minutes before checking for earthquakes again ...")
 			time.sleep(sleep_time)		
 
 		# And reset end time to now so we are synched up for this invocation.
