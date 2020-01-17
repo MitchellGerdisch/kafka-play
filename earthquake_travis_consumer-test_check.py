@@ -32,5 +32,13 @@ time.sleep(15)
 # If the table exists but has no data even and the call above showed it found earthquakes, then we got trouble.
 pg_cursor.execute("SELECT * FROM "+PG_TABLE+" ORDER BY time DESC;")
 pg_records = pg_cursor.fetchall()
-print(pg_records)
+for pg_record in pg_records:
+	mag = pg_record[0]
+	id = pg_record[1]
+	time = pg_record[2]
+	place = pg_record[3]
+	lat = pg_record[4]
+	long = pg_record[5]
+	print("id: "+id+" mag: "+mag+" time: "+time+"  lat: "+lat+" long: "+long+" place: "+place)
+	
 pg_connection.close()
