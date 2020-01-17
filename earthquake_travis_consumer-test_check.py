@@ -30,7 +30,7 @@ time.sleep(15)
 # Now dump the data from the postgres table.
 # If the table was not created, then it'll fail and throw an error.
 # If the table exists but has no data even and the call above showed it found earthquakes, then we got trouble.
-pg_cursor.execute("SELECT * FROM "+PG_TABLE+";")
+pg_cursor.execute("SELECT * FROM "+PG_TABLE+" ORDER BY time DESC;")
 pg_records = pg_cursor.fetchall()
 print(pg_records)
 pg_connection.close()
