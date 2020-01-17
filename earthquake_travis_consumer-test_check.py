@@ -18,7 +18,7 @@ pg_connection = psycopg2.connect("dbname="+PG_DB+" user="+PG_USER+" host="+PG_HO
 pg_cursor = pg_connection.cursor()
 
 # Sleep a bit to make sure the connector has time to get the data and create the table
-time.sleep(5) 
+time.sleep(15) 
 
 # Now dump the data from the postgres table.
 # If the table was not created, then it'll fail and throw an error.
