@@ -1,6 +1,6 @@
 # Earthquake Data Pipeline Using Kafka and PostgresDB
 
-This is a small project that uses the [US Geological Service Earthquake API](https://earthquake.usgs.gov/fdsnws/event/1/#methods) to collect earthquake data and then push it into a kafka stream which is then consuconsumedplaced in a Postgres DB.
+This is a small project that uses the [US Geological Service Earthquake API](https://earthquake.usgs.gov/fdsnws/event/1/#methods) to collect earthquake data and then push it into a kafka stream which is then placed in a Postgres DB.
 
 ## Connector-Based or Consumer-Based
 This repo supports two methods of getting the data into the Postgres DB: 
@@ -38,7 +38,7 @@ export PG_PASSWORD="<POSTGRES DB USER PASSWORD>"
 
 ## Usage
 * Run: earthquake_kafka_producer.py
-	* This will start by gathering data for the last several hours and then check for earthquakes every minute thereafter.
+	* This will start by gathering data for the last several hours and then check for earthquakes every few minutes thereafter.
 * (Optional) Run: earthquake_kafka_consumer.py 
     * This is only needed it using the consumer instead of or in addition to using the JDBC sink connector.
 
