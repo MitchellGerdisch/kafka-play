@@ -1,6 +1,6 @@
 # Earthquake Data Pipeline Using Kafka and PostgresDB
 
-This is a small project that uses the [US Geological Service Earthquake API](https://earthquake.usgs.gov/fdsnws/event/1/#methods) to collect earthquake data and then push it into a kafka stream which is then read on the other side by a connector that then pushes the data into a Postgres DB.
+This is a small project that uses the [US Geological Service Earthquake API](https://earthquake.usgs.gov/fdsnws/event/1/#methods) to collect earthquake data and then push it into a kafka stream which is then read on the other side by a connector and/or python consumer that then pushes the data into a Postgres DB table.
 
 ## Prerequisites
 * Kafka cluster with
@@ -11,7 +11,7 @@ This is a small project that uses the [US Geological Service Earthquake API](htt
 * Postgres DB with
 	* DB: defaultdb
 
-## Usage
+## Environment Set Up Requirements
 * Set the following environment variables:
 ```
 export KAFKA_BOOTSTRAP_SERVER="<KAFKA BOOTSTRAP SERVER>:<KAFKA PORT>"
@@ -20,15 +20,35 @@ export KAFKA_PASSWORD="<KAFKA USER PASSWORD>"
 export KAFKA_CA_FILE="<PATH TO CA FILE FOR KAFKA CLUSTER>"
 export KAFKA_CERT_FILE="<PATH TO CERT FILE FOR KAFKA CLUSTER>"
 export KAFKA_KEY_FILE="<PATH TO KEY FILE FOR KAFKA CLUSTER>"
+
+export PG_HOST="<POSTGRES DB HOST>"
+export PG_PORT="<POSTGRES DB PORT>"
+export PG_USER="<POSTGRES DB USER>"
+export PG_PASSWORD="<POSTGRES DB USER PASSWORD>"
+
 ```
+* Store the Kafka CA, Cert and Key files as per the applicable environment variables.
+
+## Usage
 * Run: earthquake_kafka_producer.py
 	* This will start by gathering data for the last several hours and then check for earthquakes every minute thereafter.
+* Run: earthquake_kafka_consumer.py
+    * This is only needed it using the consumer vs using the JDBC sink connector.
 
 ## Output
-* The earthquakes table in the Postgres DB will show the earthquake data.
+### Connector Based Pipeline
+* A table named "earthquakes" is created and populated in the Postgres DB.
+### Consumer Based Pipeline
+* A table named "earthquakes2" is created and populated in the Postgres DB.
 
-## JDBC Sink Connector Configuration Notes
-Set the configuration file as follows: 
+## Testing
+### Automated Testing Travis-CI
+A travis.yml is included to allow Travis-CI testing. You will need to manage the enironment variables and CA, Cert and Key files.
+### Manual Testing
+Run the producer and, optionally, the consumer and inspect the "earthquakes" and, if applicable "earthquakes2" tables in the database.
+
+# JDBC Sink Connector Configuration Notes
+SSet the configuration file as follows: 
 ```
 {
     "name": "kafka-pg-connector",
