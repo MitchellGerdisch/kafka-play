@@ -5,6 +5,13 @@ import psycopg2
 import os
 import time
 
+print("")
+print("********************************************************************")
+print("CHECKING EARTHQUAKE CONSUMER BASED PIPELINE DB")
+print("You should see a database dump that matches the producer records output seen above as part of the connetor test.")
+print("********************************************************************")
+print("")
+
 # Destroy existing earthquakes DB in Postgres target
 PG_HOST = os.getenv("PG_HOST")
 PG_PORT = os.getenv("PG_PORT")

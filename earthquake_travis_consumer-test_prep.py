@@ -1,12 +1,18 @@
 '''
 Prep for testing kafka producer-consumer based pipeline.
 
-WARNING WARNING WARNING: It will destroy the earthquake DB in the postgres DB that the consumer is set up to write to.
+WARNING WARNING WARNING: It will destroy the earthquakes2 table in the postgres DB that the consumer is set up to write to.
 Maybe there's a to-do here around creating a test-only connector and a test DB in postgres. 
 But for now this scorched-earth policy will be fine.
 '''
 import psycopg2
 import os
+
+print("")
+print("********************************************************************")
+print("PREPARING EARTHQUAKE CONSUMER BASED PIPELINE TEST")
+print("********************************************************************")
+print("")
 
 # Destroy existing earthquakes DB in Postgres target
 PG_HOST = os.getenv("PG_HOST")

@@ -5,7 +5,14 @@ import psycopg2
 import os
 import time
 
-# Destroy existing earthquakes DB in Postgres target
+print("")
+print("********************************************************************")
+print("CHECKING EARTHQUAKE JDBC SINK CONNECTOR BASED PIPELINE DB")
+print("You should see a database dump that matches the producer records output seen above.")
+print("********************************************************************")
+print("")
+
+# Connect to the DB
 PG_HOST = os.getenv("PG_HOST")
 PG_PORT = os.getenv("PG_PORT")
 PG_USER = os.getenv("PG_USER")
