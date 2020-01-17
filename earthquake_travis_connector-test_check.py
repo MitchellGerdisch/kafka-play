@@ -1,5 +1,5 @@
 '''
-Checks if the earthquake pipeline completed successfully by seeing if the earthquakes table was created and has content
+Checks if the earthquake jdbc sink connector based pipeline completed successfully by seeing if the earthquakes table was created and has content
 '''
 import psycopg2
 import os

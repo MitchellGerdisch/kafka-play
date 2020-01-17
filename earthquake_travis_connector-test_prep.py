@@ -1,5 +1,5 @@
 '''
-Prep for testing the producer.
+Prep for testing the producer-jdbc sink connector pipeline.
 
 WARNING WARNING WARNING: It will destroy the earthquake DB in the postgres DB that the jdbc sink connector is set up to write to.
 Maybe there's a to-do here around creating a test-only connector and a test DB in postgres. 

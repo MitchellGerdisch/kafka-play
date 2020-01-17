@@ -71,7 +71,6 @@ consumer = KafkaConsumer(
     value_deserializer=lambda m: json.loads(m.decode('utf-8'))
 )
 
-
 for record in consumer:
     payload = record.value["payload"]  # The producer inserts json that can also be consumed by a JDBC sink connector so we need to grab the "payload" bit
     # Get the info for each earthquake
@@ -86,11 +85,5 @@ for record in consumer:
     insert_string = "INSERT INTO "+pg_table+"(id, mag, lat, long, time, place) VALUES ('"+id+"',"+mag+","+lat+","+long+",'"+timestamp+"','"+place+"') ON CONFLICT (id) DO UPDATE SET mag="+mag+",lat="+lat+",long="+long+",time='"+timestamp+"',place='"+place+"';"
     pg_cursor.execute(insert_string)
     pg_connection.commit()
-    # See if being run in test mode in which case we just get the initial set of earthquakes from the previous several hours and don't wait for any additional events
-    if (len(sys.argv) > 1) and (sys.argv[1] == "TEST"):
-        print("CONSUMER: Test mode ... exiting")
-        break
-
-
 
 
