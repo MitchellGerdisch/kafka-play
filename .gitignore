@@ -1,2 +1,4 @@
 .gitsecret/keys/random_seed
 !*.secret
+__pycache__
+__pycache__/*
