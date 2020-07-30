@@ -55,7 +55,7 @@ A travis.yml is included to allow Travis-CI testing. You will need to manage the
 Run the producer and, optionally, the consumer and inspect the "earthquakes" table (if using connector) and, if applicable "earthquakes2" tables (if using consumer) in the database.
 Additionally, one can leverage the ".*-test_prep" and ".*-test_check" scripts to reset the table and dump the table. See the travis.yml script block to see how these scripts are used to test the system.
 
-# JDBC Sink Connector Configuration Notes
+# JDBC Sink Connector Configuration Notes (Aiven)
 Set the configuration file as follows: 
 ```
 {
