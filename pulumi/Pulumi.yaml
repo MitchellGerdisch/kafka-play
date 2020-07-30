@@ -1,0 +1,6 @@
+name: kafka-play
+runtime:
+  name: python
+  options:
+    virtualenv: venv
+description: Resources for kafka-play repo
