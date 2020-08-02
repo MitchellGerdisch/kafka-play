@@ -11,14 +11,18 @@ const az2 = reg+"b";
 const ubuntu_ami = "ami-0b51ab7c28f4bf5a6";  // being lazy and hard coding AMI from Ohio
 const ssh_key = "mitch-ohio-ssh";  // predefined key laziness
 
-const myvpc = new awsx.ec2.Vpc(name_base, {
+let myvpc = new awsx.ec2.Vpc(name_base, {
     cidrBlock : vpc_cidr,
+    subnets: [ 
+        {type: "public"},
+        {type: "private"}
+    ],
     numberOfNatGateways: 0,
     tags: { "Name": name_base }
 });
 
 // Allocate a security group and then a series of rules:
-const mysg = new awsx.ec2.SecurityGroup(name_base+"-sg", { myvpc });
+let mysg = new awsx.ec2.SecurityGroup(name_base+"-sg", { myvpc }, {dependsOn: [myvpc]});
 
 // 1) inbound SSH traffic on port 22 from a specific IP address
 mysg.createIngressRule("ssh-access", {
@@ -42,7 +46,7 @@ mysg.createEgressRule("outbound-access", {
 });
 
 // Build producer/consumer VM in public subnet so it's easily accessible
-const prodcon = new aws.ec2.Instance(name_base+"-prodcon", {
+let prodcon = new aws.ec2.Instance(name_base+"-prodcon", {
     ami: ubuntu_ami,
     instanceType: "t3.micro",
     associatePublicIpAddress: true,
@@ -53,16 +57,20 @@ const prodcon = new aws.ec2.Instance(name_base+"-prodcon", {
     tags: {
         "Name": name_base+"-prodcon",
     },
-});
+}, {dependsOn: [myvpc, mysg]});
 
-const  privtest = new aws.ec2.Instance(name_base+"-privtest", {
+let privtest = new aws.ec2.Instance(name_base+"-privtest", {
     ami: ubuntu_ami,
     instanceType: "t3.micro",
     availabilityZone: az1,
-    associatePublicIpAddress: false,
     subnetId: myvpc.privateSubnetIds[0],
     keyName: ssh_key,
     tags: {
         "Name": name_base+"-privtest",
     },
-});
+}, {dependsOn: [myvpc, mysg]});
+
+// Export a few resulting fields to make them easy to use:
+exports.vpcId = myvpc.id;
+exports.vpcPrivateSubnetIds = myvpc.privateSubnetIds;
+exports.vpcPublicSubnetIds = myvpc.publicSubnetIds;
