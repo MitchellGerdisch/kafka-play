@@ -1,0 +1,3 @@
+name: kafka-play-js
+runtime: nodejs
+description: Kafka Play with javascript
