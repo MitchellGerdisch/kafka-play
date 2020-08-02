@@ -22,7 +22,7 @@ let myvpc = new awsx.ec2.Vpc(name_base, {
 });
 
 // Allocate a security group and then a series of rules:
-let mysg = new awsx.ec2.SecurityGroup(name_base+"-sg", { myvpc }, {dependsOn: [myvpc]});
+let mysg = new awsx.ec2.SecurityGroup(name_base+"-sg", { myvpc });
 
 // 1) inbound SSH traffic on port 22 from a specific IP address
 mysg.createIngressRule("ssh-access", {
@@ -57,7 +57,7 @@ let prodcon = new aws.ec2.Instance(name_base+"-prodcon", {
     tags: {
         "Name": name_base+"-prodcon",
     },
-}, {dependsOn: [myvpc, mysg]});
+});
 
 let privtest = new aws.ec2.Instance(name_base+"-privtest", {
     ami: ubuntu_ami,
@@ -68,7 +68,7 @@ let privtest = new aws.ec2.Instance(name_base+"-privtest", {
     tags: {
         "Name": name_base+"-privtest",
     },
-}, {dependsOn: [myvpc, mysg]});
+});
 
 // Export a few resulting fields to make them easy to use:
 exports.vpcId = myvpc.id;
