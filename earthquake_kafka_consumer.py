@@ -57,19 +57,33 @@ pg_cursor.execute(table_create_string)
 pg_connection.commit()
 
 
-# instantiate a kafka producer connection
-consumer = KafkaConsumer(
-    "earthquakes", 
-	auto_offset_reset="earliest",
-	client_id="quake-consumer",
-	group_id="quake-group",
-    bootstrap_servers=bootstrap_server,
-    security_protocol="SSL",
-    ssl_cafile=ca_file,
-    ssl_certfile=cert_file,
-    ssl_keyfile=key_file,
-    value_deserializer=lambda m: json.loads(m.decode('utf-8'))
-)
+# instantiate a kafka producer connection based on whether or not TLS creds were set.
+producer = None
+if ca_file:
+	print("Using Client SSL authentication to brokers.")
+    consumer = KafkaConsumer(
+        "earthquakes", 
+	    auto_offset_reset="earliest",
+	    client_id="quake-consumer",
+	    group_id="quake-group",
+        bootstrap_servers=bootstrap_server,
+        security_protocol="SSL",
+        ssl_cafile=ca_file,
+        ssl_certfile=cert_file,
+        ssl_keyfile=key_file,
+        value_deserializer=lambda m: json.loads(m.decode('utf-8'))
+    )
+else:
+	print("Using NO client authentication to brokers.")
+    consumer = KafkaConsumer(
+        "earthquakes", 
+	    auto_offset_reset="earliest",
+	    client_id="quake-consumer",
+	    group_id="quake-group",
+        bootstrap_servers=bootstrap_server,
+        security_protocol="PLAINTEXT",
+        value_deserializer=lambda m: json.loads(m.decode('utf-8'))
+    ))
 
 for record in consumer:
     payload = record.value["payload"]  # The producer inserts json that can also be consumed by a JDBC sink connector so we need to grab the "payload" bit

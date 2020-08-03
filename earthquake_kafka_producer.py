@@ -39,15 +39,25 @@ ca_file = creds.ca_file
 cert_file = creds.cert_file
 key_file = creds.key_file
 
-# instantiate a kafka producer connection
-producer = KafkaProducer(
-    bootstrap_servers=bootstrap_server,
-    security_protocol="SSL",
-    ssl_cafile=ca_file,
-    ssl_certfile=cert_file,
-    ssl_keyfile=key_file,
-	value_serializer=lambda m: json.dumps(m).encode('utf-8')
-)
+# instantiate a kafka producer connection based on whether or not SSL creds are provided
+producer = None
+if ca_file:
+	print("Using Client SSL authentication to brokers.")
+	producer = KafkaProducer(
+    	bootstrap_servers=bootstrap_server,
+    	security_protocol="SSL",
+    	ssl_cafile=ca_file,
+    	ssl_certfile=cert_file,
+    	ssl_keyfile=key_file,
+		value_serializer=lambda m: json.dumps(m).encode('utf-8')
+	)
+else:
+	print("Using NO client authentication to brokers.")
+	producer = KafkaProducer(
+    	bootstrap_servers=bootstrap_server,
+    	security_protocol="PLAINTEXT",
+		value_serializer=lambda m: json.dumps(m).encode('utf-8')
+	)
 
 # Instantiate an instance of Earthquake
 quake = Earthquake(20)  # after the initial grab, will wait 30 minutes between requests for new data. Earthquakes don't happen all that frequently - thankfully

@@ -45,6 +45,11 @@ mysg.createEgressRule("outbound-access", {
     description: "allow outbound access to anywhere",
 });
 
+let az1_pub_subnet = pulumi.output(kpvpc.publicSubnetIds.then(ids => ids[0])) 
+let az2_pub_subnet = pulumi.output(kpvpc.publicSubnetIds.then(ids => ids[1])) 
+let az1_priv_subnet = pulumi.output(kpvpc.privateSubnetIds.then(ids => ids[0])) 
+let az2_priv_subnet = pulumi.output(kpvpc.privateSubnetIds.then(ids => ids[1]))
+
 
 // Build producer/consumer VM in public subnet so it's easily accessible
 let prodcon = new aws.ec2.Instance(name_base+"-prodcon", {
@@ -52,7 +57,7 @@ let prodcon = new aws.ec2.Instance(name_base+"-prodcon", {
     instanceType: "t3.micro",
     associatePublicIpAddress: true,
     availabilityZone: az1,
-    subnetId: pulumi.output(kpvpc.publicSubnetIds.then(ids => ids[0])),
+    subnetId: az1_pub_subnet,
     vpcSecurityGroupIds: [mysg.id],
     keyName: ssh_key,
     tags: {
@@ -60,15 +65,39 @@ let prodcon = new aws.ec2.Instance(name_base+"-prodcon", {
     },
 });
 
+// This is temporary for testing things.
 let privtest = new aws.ec2.Instance(name_base+"-privtest", {
     ami: ubuntu_ami,
     instanceType: "t3.micro",
     associatePublicIpAddress: false,
     availabilityZone: az2,
-    subnetId: pulumi.output(kpvpc.privateSubnetIds.then(ids => ids[1])),
+    subnetId: az2_priv_subnet,
     keyName: ssh_key,
     tags: {
         "Name": name_base+"-privtest",
+    },
+});
+
+const msk_cfg = new aws.msk.Configuration("msk_cfg", {
+    serverProperties: 'auto.create.topics.enable = true',
+});
+
+const quakes_msk = new aws.msk.Cluster("quakes", {
+    clusterName: "quakes",
+    kafkaVersion: "2.2.1",
+    configurationInfo: msk_cfg,
+    numberOfBrokerNodes: 2,
+    brokerNodeGroupInfo: {
+        instanceType: "kafka.t3.small",
+        ebsVolumeSize: 50,
+        clientSubnets: [
+            az1_priv_subnet,
+            az2_priv_subnet
+        ],
+        securityGroups: [mysg.id],
+    },
+    tags: {
+        Name: "quakes",
     },
 });
 
@@ -76,3 +105,6 @@ let privtest = new aws.ec2.Instance(name_base+"-privtest", {
 exports.vpcId = kpvpc.id;
 exports.vpcPrivateSubnetIds = kpvpc.privateSubnetIds
 exports.vpcPublicSubnetIds = kpvpc.publicSubnetIds
+exports.zookeeperConnectString = quakes_msk.zookeeperConnectString;
+exports.bootstrapBrokers = quakes_msk.bootstrapBrokers;
+exports.bootstrapBrokersTls = quakes_msk.bootstrapBrokersTls;
