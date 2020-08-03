@@ -11,7 +11,7 @@ const az2 = reg+"b";
 const ubuntu_ami = "ami-0b51ab7c28f4bf5a6";  // being lazy and hard coding AMI from Ohio
 const ssh_key = "mitch-ohio-ssh";  // predefined key laziness
 
-let myvpc = new awsx.ec2.Vpc(name_base, {
+let kpvpc = new awsx.ec2.Vpc(name_base, {
     cidrBlock : vpc_cidr,
     subnets: [ 
         {type: "public"},
@@ -22,7 +22,7 @@ let myvpc = new awsx.ec2.Vpc(name_base, {
 });
 
 // Allocate a security group and then a series of rules:
-let mysg = new awsx.ec2.SecurityGroup(name_base+"-sg", { vpc: myvpc });
+let mysg = new awsx.ec2.SecurityGroup(name_base+"-sg", { vpc: kpvpc });
 
 // 1) inbound SSH traffic on port 22 from a specific IP address
 mysg.createIngressRule("ssh-access", {
@@ -45,13 +45,14 @@ mysg.createEgressRule("outbound-access", {
     description: "allow outbound access to anywhere",
 });
 
+
 // Build producer/consumer VM in public subnet so it's easily accessible
 let prodcon = new aws.ec2.Instance(name_base+"-prodcon", {
     ami: ubuntu_ami,
     instanceType: "t3.micro",
     associatePublicIpAddress: true,
     availabilityZone: az1,
-    subnetId: myvpc.publicSubnetIds[0],
+    subnetId: pulumi.output(kpvpc.publicSubnetIds.then(ids => ids[0])),
     vpcSecurityGroupIds: [mysg.id],
     keyName: ssh_key,
     tags: {
@@ -63,8 +64,8 @@ let privtest = new aws.ec2.Instance(name_base+"-privtest", {
     ami: ubuntu_ami,
     instanceType: "t3.micro",
     associatePublicIpAddress: false,
-    availabilityZone: az1,
-    subnetId: myvpc.privateSubnetIds[0],
+    availabilityZone: az2,
+    subnetId: pulumi.output(kpvpc.privateSubnetIds.then(ids => ids[1])),
     keyName: ssh_key,
     tags: {
         "Name": name_base+"-privtest",
@@ -72,6 +73,6 @@ let privtest = new aws.ec2.Instance(name_base+"-privtest", {
 });
 
 // Export a few resulting fields to make them easy to use:
-exports.vpcId = myvpc.id;
-exports.vpcPrivateSubnetIds = myvpc.privateSubnetIds
-exports.vpcPublicSubnetIds = myvpc.publicSubnetIds
+exports.vpcId = kpvpc.id;
+exports.vpcPrivateSubnetIds = kpvpc.privateSubnetIds
+exports.vpcPublicSubnetIds = kpvpc.publicSubnetIds
